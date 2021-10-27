@@ -1,14 +1,15 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    AudioSource moveAudio;
+    private AudioSource move;
     // Start is called before the first frame update
     void Start()
     {
-        moveAudio = GetComponent<AudioSource>();
+        move = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -17,20 +18,30 @@ public class Player : MonoBehaviour
         
     }
 
-    public void Move(Vector2 direction) 
+    public void Move(Vector2 direction)
     {
-        Debug.Log("dir:" + direction.magnitude);
-        if (direction.sqrMagnitude >= 2)  //대각선 방지를 위해 
+        //direction.Normalize();
+        Debug.Log("dir:"+direction.sqrMagnitude); //대각선일때(diagonally) 2 
+        if (direction.sqrMagnitude >= 2) //대각선방지
         {
             direction.y = 0;
         }
-        
 
-        if (!GameManager.instance.isWall(direction, new Vector2(transform.position.x,transform.position.y) ))
+        //Vector2 nextPosition = direction + new Vector2(transform.position.x,transform.position.y);
+
+        //Debug.Log("wall:"+ GameManager.isWall(nextPosition));
+        if (!GameManager.instance.isWall(direction, new Vector2(transform.position.x, transform.position.y)))
         {
             transform.Translate(direction);
-            moveAudio.Play();
+            move.Play();
         }
+            
         
+        //if(isClear()) Debug.Log("stage clear!");
+    }
+
+    public void OnTriggerStay2D(Collider2D other)
+    {
+        Debug.Log("o:"+other.gameObject.name);
     }
 }

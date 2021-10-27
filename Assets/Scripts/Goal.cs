@@ -1,17 +1,18 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Goal : MonoBehaviour
 {
     private Animator goalAnim;
-    public bool achive;
-
+    public bool achieve;
+    
     // Start is called before the first frame update
     void Start()
     {
         goalAnim = GetComponent<Animator>();
-        achive = false;
+        achieve = false;
     }
 
     // Update is called once per frame
@@ -20,17 +21,22 @@ public class Goal : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log("Goal In");
-        achive = true;
+        Debug.Log("Goal in");
         goalAnim.SetBool("Succeed", true);
+
+        GetComponent<SpriteRenderer>().sortingLayerName = "Complete";
+        achieve = true;
+        GameManager.instance.IsClear();
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnCollisionExit2D(Collision2D other)
     {
-        Debug.Log("Goal Out");
-        achive = false;
+        Debug.Log("Goal out");
         goalAnim.SetBool("Succeed", false);
+        
+        GetComponent<SpriteRenderer>().sortingLayerName = "Default";
+        achieve = false;
     }
 }
